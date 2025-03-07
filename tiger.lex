@@ -43,8 +43,8 @@ nil            { adjust(); return NIL; }
 var            { adjust(); return VAR; }
 type           { adjust(); return TYPE; }
 array          { adjust(); return ARRAY; }
-and            { adjust(); return AND; }
-or             { adjust(); return OR; }
+and|"&"            { adjust(); return AND; }
+or|"|"             { adjust(); return OR; }
 
 [0-9]+         { adjust(); yylval.ival = atoi(yytext); return INT; }
 
@@ -71,7 +71,8 @@ or             { adjust(); return OR; }
 ">"            { adjust(); return GT; }
 
 [a-zA-Z][a-zA-Z0-9]*  { adjust(); yylval.sval = strdup(yytext); return ID; }
-\"([^\\\"\n]|(\\(.|\n)))*\"  { adjust(); yylval.sval = parseString(yytext); return STRING; }
+\"([^\\\"\n]|(\\(.|\n)))*\"         { adjust(); yylval.sval = String(yytext); return STRING; }
+"/*"([^*]|\*+[^*/])*\*+"/"  { adjust(); yylval.sval = String(yytext); return STRING; }
 
 .              { adjust(); EM_error(EM_tokPos, "illegal token"); }
 
